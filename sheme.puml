@@ -1,0 +1,45 @@
+@startuml
+!theme materia-outline
+
+
+class Calendar {
+
+    data = data(YYYY,MMMM,DDDD)
+    work_day = bool
+
+}
+
+
+class Employee {
+
+    bio = string(name)
+    vacations = onetomany(Vacation)
+    day_off= 28(if disabled 29)
+    disabled = bool
+    admin = bool
+}
+
+class Vacation {
+
+    ondata = data(YYYY,MMMM,DDDD)
+    offdata = data(YYYY,MMMM,DDDD)
+
+}
+
+class EmployeeAdmin {
+    rights = list
+}
+
+Employee <== EmployeeAdmin
+Vacation <== Employee
+Vacation <== Calendar : can get
+Calendar ==> Employee : can get
+Bot - Calendar : get calendar  ->
+Bot - Employee : show vacation employees  >
+Bot - Employee : show calendar  *>
+Bot - EmployeeAdmin : edit vacation employees  >
+Bot - Vacation : get vacation employees is vacantion intersect mark thems <
+Bot - Vacation : get vacation employee is vacantion day add too employee<
+Bot - EmployeeAdmin : show vacation employees  <
+Bot - Employee : edit vacation  ->
+@enduml
