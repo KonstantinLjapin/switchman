@@ -1,28 +1,9 @@
-# This is a simple echo bot using the decorator mechanism.
-# It echoes any incoming text messages.
-
-from telebot.async_telebot import AsyncTeleBot
+from core.bot import bot
 import asyncio
-from config import load_config
+from custom_handlers.message import register_custom_message_handlers
+from custom_handlers.callback import register_custom_callback_query_handlers
 
 
-config = load_config(".env")
-bot = AsyncTeleBot(token=config.tg_bot.token)
-
-
-# Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
-async def send_welcome(message):
-    await bot.reply_to(message, """\
-Hi there, I am EchoBot.
-I am here to echo your kind words back to you. Just say anything nice and I'll say the exact same thing to you!\
-""")
-
-
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
-@bot.message_handler(func=lambda message: True)
-async def echo_message(message):
-    await bot.reply_to(message, message.text)
-
-
+register_custom_message_handlers(bot)
+register_custom_callback_query_handlers(bot)
 asyncio.run(bot.polling())
