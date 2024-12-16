@@ -1,7 +1,8 @@
 from typing import Any
 
 import aiohttp
-import asyncio
+
+# TODO logging
 
 
 async def this_day() -> Any:
@@ -12,9 +13,9 @@ async def this_day() -> Any:
             print("Status:", response.status)
             print("Content-type:", response.headers['content-type'])
 
-            html = "D" + await response.text()
-            print("Body:", html)
-            print(len(html))
+            day_status = "D" + await response.text()
+            print("Body:", day_status)
+            return day_status
 
 
 async def this_month(year: str, month: str) -> Any:
@@ -26,9 +27,9 @@ async def this_month(year: str, month: str) -> Any:
             print("Status:", response.status)
             print("Content-type:", response.headers['content-type'])
 
-            html = "M"+(await response.text())
-            print("Body:", html)
-            print(len(html))
+            days_in_mount_status: str = "M"+(await response.text())
+            print("Body:", days_in_mount_status)
+            return days_in_mount_status
 
 
 async def this_year(year: str) -> Any:
@@ -43,6 +44,3 @@ async def this_year(year: str) -> Any:
             html = "Y"+(await response.text())
             print("Body:", html)
             print(len(html))
-
-asyncio.run(this_year("2025"))
-

@@ -1,6 +1,5 @@
 from telebot.async_telebot import AsyncTeleBot
-from core.config import load_config
+from core.config import bot_settings
 
 
-config = load_config(".env")
-bot = AsyncTeleBot(token=config.tg_bot.token)
+bot = AsyncTeleBot(token=bot_settings.bot_token)
