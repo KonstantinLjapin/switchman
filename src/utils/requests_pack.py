@@ -6,6 +6,8 @@ import aiohttp
 
 
 async def this_day() -> Any:
+    """Запрос к Api алиасом этот день возвращаает строку
+     на 1 индексе статус дня при ответе от сервера 200"""
 
     async with aiohttp.ClientSession() as session:
         async with session.get('https://isdayoff.ru/today') as response:
@@ -19,10 +21,12 @@ async def this_day() -> Any:
 
 
 async def this_month(year: str, month: str) -> Any:
+    """Запрос к Api получение статуста дней возращает строку с 1 по 31(28) индексы
+     в месяце конкретного года при статусе ответа от сервера 200"""
 
-    month: str = f"https://isdayoff.ru/api/getdata?year={year}&month={month}"
+    data: str = f"https://isdayoff.ru/api/getdata?year={year}&month={month}"
     async with aiohttp.ClientSession() as session:
-        async with session.get(month) as response:
+        async with session.get(data) as response:
 
             print("Status:", response.status)
             print("Content-type:", response.headers['content-type'])
@@ -33,10 +37,12 @@ async def this_month(year: str, month: str) -> Any:
 
 
 async def this_year(year: str) -> Any:
+    """Запрос к Api получение статуста  до 366 дней
+          конкретном году при статусе ответа от сервера 200"""
 
-    month: str = f"https://isdayoff.ru/api/getdata?year={year}"
+    data: str = f"https://isdayoff.ru/api/getdata?year={year}"
     async with aiohttp.ClientSession() as session:
-        async with session.get(month) as response:
+        async with session.get(data) as response:
 
             print("Status:", response.status)
             print("Content-type:", response.headers['content-type'])
