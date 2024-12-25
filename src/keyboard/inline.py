@@ -12,10 +12,12 @@ def gen_markup():
 
 async def gen_precending_now_coming_year_markup() -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
-    markup.row_width = 3
-    markup.add(InlineKeyboardButton(str(await now_year() - 1), callback_data="precending"),
-               InlineKeyboardButton(str(await now_year()), callback_data="now"),
-               InlineKeyboardButton(str(await now_year() + 1), callback_data="coming"))
+    markup.row(InlineKeyboardButton(str(await now_year() - 1),
+                                    callback_data=f"calendar_year{str(await now_year() - 1)}"),
+               InlineKeyboardButton(str(await now_year()),
+                                    callback_data=f"calendar_year{str(await now_year())}"),
+               InlineKeyboardButton(str(await now_year() + 1),
+                                    callback_data=f"calendar_year{str(await now_year() + 1)}"))
     return markup
 
 

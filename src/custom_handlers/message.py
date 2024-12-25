@@ -22,7 +22,7 @@ async def this_day_is_message(message: Message, bot: AsyncTeleBot) -> None:
 
 
 async def calendar(message: Message, bot: AsyncTeleBot) -> None:
-    await bot.send_message(message.chat.id, "Ys", reply_markup=await gen_precending_now_coming_year_markup())
+    await bot.send_message(message.chat.id, "Выбери год", reply_markup=await gen_precending_now_coming_year_markup())
 
 
 async def echo_message(message, bot: AsyncTeleBot) -> None:
