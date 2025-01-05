@@ -4,15 +4,16 @@ from telebot.asyncio_filters import AdvancedCustomFilter
 from telebot.callback_data import CallbackData, CallbackDataFilter
 
 
-calendar_factory = CallbackData("year", "month", prefix="calendar")
+simpl_factory = CallbackData(prefix="simpl1234")
 
 
-class CalendarCallbackFilter(AdvancedCustomFilter):
-    key = 'calendar'
+class SimplCallbackFilter(AdvancedCustomFilter):
+    key = 'config'
 
     async def check(self, call: types.CallbackQuery, config: CallbackDataFilter):
+        print("Filter  simpl called")
         return config.check(query=call)
 
 
 def bind_filters(bot: AsyncTeleBot):
-    bot.add_custom_filter(CalendarCallbackFilter())
+    bot.add_custom_filter(SimplCallbackFilter())

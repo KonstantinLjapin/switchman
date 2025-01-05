@@ -3,7 +3,7 @@ from telebot.types import Message
 from static.dictionary import greeting_text
 from utils.requests_pack import this_day
 from utils.calendar_worker import day_status
-from keyboard.inline import gen_precending_now_coming_year_markup, gen_markup
+from keyboard.inline import gen_precending_now_coming_year_markup, gen_markup, gen_siml_markup
 # TODO write state and middleware
 
 
@@ -25,6 +25,10 @@ async def calendar(message: Message, bot: AsyncTeleBot) -> None:
     await bot.send_message(message.chat.id, "Выбери год", reply_markup=await gen_precending_now_coming_year_markup())
 
 
+async def simpl(message: Message, bot: AsyncTeleBot) -> None:
+    await bot.send_message(message.chat.id, "simpl", reply_markup=await gen_siml_markup())
+
+
 async def echo_message(message, bot: AsyncTeleBot) -> None:
     await bot.reply_to(message, message.text)
     await bot.send_message(message.chat.id, "Yes/no?", reply_markup=gen_markup())
@@ -32,6 +36,7 @@ async def echo_message(message, bot: AsyncTeleBot) -> None:
 
 def register_custom_message_handlers(bot: AsyncTeleBot):
     bot.register_message_handler(start_message, commands=["start"], pass_bot=True)
+    bot.register_message_handler(simpl, commands=["simpl"], pass_bot=True)
     bot.register_message_handler(this_day_is_message, commands=["this_day"], pass_bot=True)
     bot.register_message_handler(calendar, commands=["calendar"], pass_bot=True)
     bot.register_message_handler(echo_message, func=lambda message: True, pass_bot=True)

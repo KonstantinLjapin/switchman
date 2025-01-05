@@ -37,3 +37,9 @@ async def gen_days_in_mount_markup(days_bundle: list) -> InlineKeyboardMarkup:
         status: str = await day_status(day)
         markup.add(InlineKeyboardButton(status, callback_data="cb_yes"))
     return markup
+
+
+async def gen_siml_markup() -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.row(InlineKeyboardButton("Push me", callback_data=f"simpl1234"))
+    return markup
