@@ -5,31 +5,23 @@ from telebot.types import CallbackQuery
 from filters.calendar import calendar_factory
 from filters.simpl import simpl_factory
 
-
-# TODO Filter on callback
-
-
+# TODO select handlers group
 async def calendar_action_handler(call: CallbackQuery, bot: AsyncTeleBot):
-    print("!!!!!")
-    print("simpl callback query")
     await bot.send_message(call.id, text='calendar_all_button')
 
 
 async def simpl_callback_query(call: CallbackQuery, bot: AsyncTeleBot) -> None:
-    print("!!!!!")
-    print("simpl callback query")
     await bot.answer_callback_query(call.id, text='simpl_callback')
 
 
 async def echo_callback_query(call: CallbackQuery, bot: AsyncTeleBot) -> None:
-    print("Echo callback query")
     await bot.answer_callback_query(call.id, text='all_echo')
 
 
 def register_custom_callback_query_handlers(bot: AsyncTeleBot):
-    bot.register_callback_query_handler(simpl_callback_query, func=None, config=simpl_factory.filter(),
+    bot.register_callback_query_handler(simpl_callback_query, func=None, simpl=simpl_factory.filter(),
                                         pass_bot=True)
-    bot.register_callback_query_handler(calendar_action_handler, func=None, calendar=calendar_factory.filter(),
-                                        pass_bot=True)
+    bot.register_callback_query_handler(calendar_action_handler, func=None, calendar=calendar_factory.filter(),pass_bot=True)
+
     bot.register_callback_query_handler(echo_callback_query, func=lambda call: True,
                                         pass_bot=True)

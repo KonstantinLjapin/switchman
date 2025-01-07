@@ -8,10 +8,9 @@ simpl_factory = CallbackData(prefix="simpl1234")
 
 
 class SimplCallbackFilter(AdvancedCustomFilter):
-    key = 'config'
+    key = 'simpl'
 
     async def check(self, call: types.CallbackQuery, config: CallbackDataFilter):
-        print("Filter  simpl called")
         return config.check(query=call)
 
 

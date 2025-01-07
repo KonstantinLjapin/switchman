@@ -11,7 +11,6 @@ class CalendarCallbackFilter(AdvancedCustomFilter):
     key = 'calendar'
 
     async def check(self, call: types.CallbackQuery, config: CallbackDataFilter):
-        print("Filter calendar called")
         return config.check(query=call)
 
 
