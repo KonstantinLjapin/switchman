@@ -20,7 +20,7 @@
 - python3.12
 - aiohttp
 - pyTelegramBotAPI (asynchronous_telebot)
-
+- poetry (сомнительный инструмент)
 ### Используемые API 
 - https://www.isdayoff.ru/ получение статуса дня рабочий или нет
 

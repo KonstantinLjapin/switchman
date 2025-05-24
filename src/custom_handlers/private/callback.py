@@ -6,6 +6,8 @@ from filters.calendar import calendar_factory
 from filters.simpl import simpl_factory
 
 # TODO select handlers group
+
+
 async def calendar_action_handler(call: CallbackQuery, bot: AsyncTeleBot):
     await bot.send_message(call.id, text='calendar_all_button')
 

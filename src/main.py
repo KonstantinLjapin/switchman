@@ -7,6 +7,7 @@ from filters.calendar import bind_calendar_filters
 from filters.simpl import bind_filters
 from middleware.logging_middleware import register_log_middleware
 
+
 async def register_filters(bot):
     bind_calendar_filters(bot)
     bind_filters(bot)

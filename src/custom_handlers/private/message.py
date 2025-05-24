@@ -4,7 +4,7 @@ from static.dictionary import greeting_text
 from utils.requests_pack import this_day
 from utils.calendar_worker import day_status
 from keyboard.inline import gen_precending_now_coming_year_markup, gen_markup, gen_siml_markup
-from logging import RootLogger
+from logging import Logger
 # TODO write state and middleware
 
 
@@ -26,8 +26,8 @@ async def calendar(message: Message, bot: AsyncTeleBot) -> None:
     await bot.send_message(message.chat.id, "Выбери год", reply_markup=await gen_precending_now_coming_year_markup())
 
 
-async def simpl(message: Message, bot: AsyncTeleBot, logger: RootLogger) -> None:
-    logger.info("handler!!! LOGER")
+async def simpl(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
+    #logger.info("handler!!! LOGER exampl")
     await bot.send_message(message.chat.id, "simpl", reply_markup=await gen_siml_markup())
 
 
