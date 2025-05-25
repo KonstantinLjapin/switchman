@@ -14,6 +14,7 @@ TRANSLATIONS = {
     }
 }
 
+
 class LanguageMiddleware(asyncio_handler_backends.BaseMiddleware):
     def __init__(self):
         self.update_types = ['message']  # Update types that will be handled by this middleware.

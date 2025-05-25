@@ -2,7 +2,7 @@ from telebot.async_telebot import AsyncTeleBot
 from telebot.types import Message
 from static.dictionary import greeting_text
 from utils.requests_pack import this_day
-from utils.calendar_worker import day_status
+from utils.calendar_worker import day_status, month_status
 from keyboard.inline import gen_precending_now_coming_year_markup, gen_markup, gen_siml_markup
 from logging import Logger
 # TODO write state and middleware
@@ -17,8 +17,14 @@ async def start_message(message: Message, bot: AsyncTeleBot) -> None:
     await bot.send_message(message.from_user.id, text=text)
 
 
-async def this_day_is(message: Message, bot: AsyncTeleBot, ) -> None:
-    status: str = await day_status(await this_day())
+async def this_day_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
+    status: str = await day_status(await this_day(logger))
+    await bot.send_message(message.from_user.id, text=status)
+logger: Logger
+
+
+async def this_mount_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
+    status: str = await month_status(logger)
     await bot.send_message(message.from_user.id, text=status)
 
 
@@ -40,5 +46,6 @@ def register_custom_message_handlers(bot: AsyncTeleBot):
     bot.register_message_handler(start_message, commands=["start"], pass_bot=True)
     bot.register_message_handler(simpl, commands=["simpl"], pass_bot=True)
     bot.register_message_handler(this_day_is, commands=["this_day_is"], pass_bot=True)
+    bot.register_message_handler(this_mount_is, commands=["this_mount_is"], pass_bot=True)
     bot.register_message_handler(calendar, commands=["calendar"], pass_bot=True)
     bot.register_message_handler(echo_message, func=lambda message: True, pass_bot=True)

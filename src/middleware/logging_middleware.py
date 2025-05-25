@@ -23,6 +23,7 @@ class LoggingMiddleware(asyncio_handler_backends.BaseMiddleware):
             self.logger.info(f" || {message.__class__.__name__}"
                              f" || user {message.from_user.username}"
                              f" || id {str(message.from_user.id)}"
+                             f" || chat_id {str(message.chat.id)}"
                              f" || execution {execution_time:.3f} sec")
 
 
