@@ -30,8 +30,7 @@ async def mounts_bundle(statistic: str) -> str:
 
     for day in range(len(statistic)):
         if statistic[day].isdigit():
-            status = int(statistic[day])
-            emoji = "🔴" if status else "🟢"
+            emoji = "🔴" if int(statistic[day]) else "🟢"
             day_number = str(day)
             days += f"{emoji}{day_number}, "
     return days.rstrip(", ")
