@@ -1,9 +1,6 @@
-from calendar import Calendar
 
 from telebot.async_telebot import AsyncTeleBot
 from telebot.types import CallbackQuery
-from filters.calendar import calendar_factory
-from filters.simpl import simpl_factory
 
 # TODO select handlers group
 
@@ -21,10 +18,10 @@ async def echo_callback_query(call: CallbackQuery, bot: AsyncTeleBot) -> None:
 
 
 def register_custom_callback_query_handlers(bot: AsyncTeleBot):
-    bot.register_callback_query_handler(simpl_callback_query, func=None, simpl=simpl_factory.filter(),
+    """bot.register_callback_query_handler(simpl_callback_query, func=None,
                                         pass_bot=True)
-    bot.register_callback_query_handler(calendar_action_handler, func=None, calendar=calendar_factory.filter(),
+    bot.register_callback_query_handler(calendar_action_handler, func=None,
                                         pass_bot=True)
 
     bot.register_callback_query_handler(echo_callback_query, func=lambda call: True,
-                                        pass_bot=True)
+                                        pass_bot=True)"""

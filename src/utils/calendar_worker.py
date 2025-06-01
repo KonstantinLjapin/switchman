@@ -12,6 +12,11 @@ async def set_ru():
     locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
 
+def keyboard_set_ru():
+    """# устанавливаем локаль
+          # 'ru_RU.UTF-8'"""
+    locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 async def now_year():
     """плучение текущего года"""
     now = datetime.now().year
@@ -23,7 +28,7 @@ async def mounts_bundle(statistic: str) -> str:
 
     Пример вывода:
     🔴 1, 🟢 2, 🔴 3, 🟢 4, 🔴 5, 🟢 6, 🔴 7
-    🟢 8, 🔴 9, 🟢10, 🔴11, 🟢12, 🔴13, 🟢14
+    🟢 8, 🔴 9, 🟢10, 🔴11, 🟢12, 🔴13, 🟢14...
     ...
     """
     days: str = ""

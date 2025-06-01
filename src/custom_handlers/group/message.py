@@ -33,7 +33,7 @@ async def echo_message(message, bot: AsyncTeleBot) -> None:
 
 
 def register_chat_custom_message_handlers(bot: AsyncTeleBot):
-    bot.register_message_handler(start_message, commands=["start"], pass_bot=True)
-    bot.register_message_handler(this_day_is, commands=["this_day_is"], pass_bot=True)
-    bot.register_message_handler(this_mount_is, commands=["this_mount_is"], pass_bot=True)
-    #bot.register_message_handler(echo_message, func=lambda message: True, pass_bot=True)
+    bot.register_message_handler(start_message, commands=["start"], pass_bot=True, is_group=True, state="*")
+    bot.register_message_handler(this_day_is, commands=["this_day_is"], pass_bot=True, is_group=True, state="*")
+    bot.register_message_handler(this_mount_is, commands=["this_mount_is"], pass_bot=True, is_group=True, state="*")
+    bot.register_message_handler(echo_message, func=lambda message: True, pass_bot=True, is_group=True, state="*")
