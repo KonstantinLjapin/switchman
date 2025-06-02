@@ -89,4 +89,6 @@ class IsPrivate(AdvancedCustomFilter):
         return message.chat.type == 'private'
 
 
-
+async def register_message_filters(bot, logger):
+    bot.add_custom_filter(IsPrivate(logger))
+    bot.add_custom_filter(IsGroup(logger))

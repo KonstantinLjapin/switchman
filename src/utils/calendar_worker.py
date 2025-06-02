@@ -41,10 +41,10 @@ async def mounts_bundle(statistic: str) -> str:
     return days.rstrip(", ")
 
 
-async def month_status(logger: Logger):
+async def month_status(month, logger: Logger):
     await set_ru()
     today = datetime.now()
-    statistic: str = await this_month(today.year, today.month, logger)
+    statistic: str = await this_month(today.year, month, logger)
     bundle: str = await mounts_bundle(statistic)
     return bundle
 
