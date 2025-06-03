@@ -52,4 +52,4 @@ async def month_status(month, logger: Logger):
 async def day_status(day: str):
     await set_ru()
     answer: str = "Выходной" if int(day[1]) else "Рабочий"
-    return f"Сегодня {datetime.now().day} {calendar.month_name[datetime.now().month]} и сегодня {answer}"
+    return f"Сегодня {datetime.now().day} {calendar.month_name[datetime.now().month]} и сегодня {answer} день"

@@ -17,33 +17,31 @@ async def start_message(message: Message, bot: AsyncTeleBot, logger: Logger) -> 
                 f" || chat_id {str(message.chat.id)}")
     user_name = message.from_user.full_name
     text = await greeting_text(user_name)
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     msg: Message = await bot.send_message(chat_id=message.from_user.id, text=text)
     await asyncio.sleep(60)
     await bot.delete_message(chat_id=message.from_user.id, message_id=msg.message_id)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
 
 
 async def this_day_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
     status: str = await day_status(await this_day(logger))
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     msg: Message = await bot.send_message(message.from_user.id, text=status)
     await asyncio.sleep(60)
     await bot.delete_message(chat_id=message.from_user.id, message_id=msg.message_id)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
 
 
 async def this_mount_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
     today = datetime.now()
     status: str = await month_status(month=today.month, logger=logger)
+    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
     msg: Message = await bot.send_message(message.from_user.id, text=status)
     await asyncio.sleep(60)
     await bot.delete_message(chat_id=message.from_user.id, message_id=msg.message_id)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
 
 
 async def this_year_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> None:
-    msg: Message = await bot.send_message(chat_id=message.from_user.id, text="Все дни для:", reply_markup=gen_markup())
-    await asyncio.sleep(60)
-    await bot.delete_message(chat_id=message.from_user.id, message_id=msg.message_id)
+    await bot.send_message(chat_id=message.from_user.id, text="Все дни для:", reply_markup=gen_markup())
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
 
 
