@@ -46,7 +46,7 @@ async def this_year_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> N
 
 
 async def echo_message(message, bot: AsyncTeleBot, logger: Logger) -> None:
-    await bot.send_message(message.chat.id, "echo private message")
+    pass
 
 
 def register_custom_message_handlers(bot: AsyncTeleBot):
