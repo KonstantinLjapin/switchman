@@ -23,7 +23,7 @@ async def now_year():
     return int(now)
 
 
-async def mounts_bundle(statistic: str) -> str:
+async def mounts_bundle(statistic: str, month: int, year: int) -> str:
     """Формирует ровное отображение дней с эмодзи, разделяя каждые 7 дней.
 
     Пример вывода:
@@ -41,11 +41,47 @@ async def mounts_bundle(statistic: str) -> str:
     return days.rstrip(", ")
 
 
+async def modern_mounts_bundle(statistic: str, month: int, year: int) -> str:
+    """Формирует календарь на месяц с эмодзи, выровненный по дням недели."""
+    import calendar
+
+    # Создаем матрицу календаря
+    cal = calendar.monthcalendar(year, month)
+
+    # Формируем заголовок с днями недели (фиксированная ширина 4 символа)
+    weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    header_parts = [f"📅{day:2}" for day in weekdays]
+    weekdays_header = " ".join(header_parts)
+
+    result_lines = [weekdays_header]
+
+    for week in cal:
+        week_days = []
+        for day in week:
+            if day == 0:
+                # Пустой день (принадлежит другому месяцу)
+                week_days.append("    ")
+            else:
+                # Получаем данные для дня
+                if day - 1 < len(statistic) and statistic[day - 1].isdigit():
+                    emoji = "🔴" if int(statistic[day - 1]) else "🟢"
+                else:
+                    emoji = "⚪"  # Если данных нет
+
+                # Форматируем число дня
+                day_str = f"{day:2d}" if day > 9 else f" {day}"
+                week_days.append(f"{emoji}{day_str}")
+
+        result_lines.append(" ".join(week_days))
+
+    return "\n".join(result_lines)
+
+
 async def month_status(month, logger: Logger):
     await set_ru()
-    today = datetime.now()
-    statistic: str = await this_month(today.year, month, logger)
-    bundle: str = await mounts_bundle(statistic)
+    year = datetime.now().year
+    statistic: str = await this_month(year, month, logger)
+    bundle: str = await modern_mounts_bundle(statistic, month, year)
     return bundle
 
 
