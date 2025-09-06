@@ -35,7 +35,7 @@ async def this_mount_is(message: Message, bot: AsyncTeleBot, logger: Logger) -> 
     today = datetime.now()
     status: str = await month_status(month=today.month, logger=logger)
     await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id)
-    msg: Message = await bot.send_message(message.from_user.id, text=status)
+    msg: Message = await bot.send_message(message.chat.id, text="```" + status + "```", parse_mode='MarkdownV2')
     await asyncio.sleep(60)
     await bot.delete_message(chat_id=message.from_user.id, message_id=msg.message_id)
 

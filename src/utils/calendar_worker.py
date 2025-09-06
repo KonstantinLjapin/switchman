@@ -42,39 +42,66 @@ async def mounts_bundle(statistic: str, month: int, year: int) -> str:
 
 
 async def modern_mounts_bundle(statistic: str, month: int, year: int) -> str:
-    """Формирует календарь на месяц с эмодзи, выровненный по дням недели."""
-    import calendar
+    """Формирует календарь в виде таблицы с правильным отображением дней недели."""
+    # Определяем количество дней в месяце
+    _, days_in_month = calendar.monthrange(year, month)
 
-    # Создаем матрицу календаря
-    cal = calendar.monthcalendar(year, month)
+    first_weekday = datetime(year, month, 1).weekday()  # Понедельник=0, Воскресенье=6
+    # Формируем календарь
+    output = " Пн| Вт| Ср| Чт| Пт| Сб| Вс\n"
 
-    # Формируем заголовок с днями недели (фиксированная ширина 4 символа)
-    weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-    header_parts = [f"📅{day:2}" for day in weekdays]
-    weekdays_header = " ".join(header_parts)
+    days: list = []
+    emojis: list = []
+    # form a bundl days - emojis
+    for day in range(len(statistic)):
+        if statistic[day].isdigit():
+            emojis.append("ВЫХ" if int(statistic[day]) else "БУД")
+            days.append(str(day))
+    size_tale_of_week: int = len(days) % 7
+    day_line: str = ""
+    emoji_line: str = ""
+    n = 0
+    for day_in_week in range(7):
+        if day_in_week >= first_weekday:
+            day_line += f"  {days[n]}|"
+            emoji_line += f"{emojis[n]}|"
+            n = n + 1
+        else:
+            day_line += f"   |"
+            emoji_line += f"  H|"
 
-    result_lines = [weekdays_header]
+    output += emoji_line[:-1] + "\n" + day_line[:-1] + "\n"
+    del emojis[:7-first_weekday]
+    del days[:7-first_weekday]
+    f = 0
+    # clear temp string line
+    day_line = ""
+    emoji_line = ""
+    # form full week
+    for day, emoji, t_index in zip(days, emojis, range(len(emojis))):
+        f += 1
+        day_line += f" {days[t_index]}|" if len(days[t_index]) > 1 else f"  {days[t_index]}|"
+        emoji_line += f"{emojis[t_index]}|"
+        if f % 7 == 0:
+            # заполняются толко полные недели не полная неделя вылетает
+            output = output + emoji_line[:-1] + "\n" + day_line[:-1] + "\n"
+            day_line = ""
+            emoji_line = ""
+            f = 0
 
-    for week in cal:
-        week_days = []
-        for day in week:
-            if day == 0:
-                # Пустой день (принадлежит другому месяцу)
-                week_days.append("    ")
-            else:
-                # Получаем данные для дня
-                if day - 1 < len(statistic) and statistic[day - 1].isdigit():
-                    emoji = "🔴" if int(statistic[day - 1]) else "🟢"
-                else:
-                    emoji = "⚪"  # Если данных нет
-
-                # Форматируем число дня
-                day_str = f"{day:2d}" if day > 9 else f" {day}"
-                week_days.append(f"{emoji}{day_str}")
-
-        result_lines.append(" ".join(week_days))
-
-    return "\n".join(result_lines)
+    del emojis[:-size_tale_of_week]
+    del days[:-size_tale_of_week]
+    # clear temp string line
+    day_line = ""
+    emoji_line = ""
+    # TODO нужно предусмотреть заполнение всейх недель когда остатка нету
+    for day, emoji, t_index in zip(days, emojis, range(len(emojis))):
+        f += 1
+        day_line += f" {days[t_index]}|" if len(days[t_index]) > 1 else f"  {days[t_index]}|"
+        emoji_line += f"{emojis[t_index]}|"
+    # pull the tail of week
+    output = output + emoji_line[:-1] + "\n" + day_line[:-1] + "\n"
+    return output
 
 
 async def month_status(month, logger: Logger):
@@ -89,3 +116,7 @@ async def day_status(day: str):
     await set_ru()
     answer: str = "Выходной" if int(day[1]) else "Рабочий"
     return f"Сегодня {datetime.now().day} {calendar.month_name[datetime.now().month]} и сегодня {answer} день"
+
+
+if __name__ == '__main__':
+    print(asyncio.run(modern_mounts_bundle("M010101001001001010101010101010", 5, 2025)))
