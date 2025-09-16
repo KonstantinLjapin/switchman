@@ -9,7 +9,7 @@ services:
     container_name: bot
     command: bash -c "sleep 15s;
       cd src;
-      python main.py;"
+      python3 -m src.main;"
     volumes:
       - ./dump/app:/usr/src/app
     networks:
