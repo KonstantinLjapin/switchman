@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "switchman"
-version = "0.1.0"
+version = "0.1.1"
 packages = [
     {include = "*", from = "src"}  # Все файлы из src/ как пакет
 ]
