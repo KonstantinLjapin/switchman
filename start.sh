@@ -12,10 +12,15 @@ export PYTHONPATH="/home/laser_boy/switchman/src:$PYTHONPATH"
 export BOT_TOKEN=$(grep "BOT_TOKEN" .env | cut -d= -f2)
 echo "$BOT_TOKEN : BOT_TOKEN loaded"
 
-# Запускаем в режиме демона
-nohup python -m main > /dev/null 2>&1 &
-
-# Сохраняем PID процесса для возможности управления им later
-echo $! > bot.pid
-
-echo "Бот запущен в фоновом режиме с PID: $!"
+# Проверяем наличие аргумента
+if [ "$1" = "y" ]; then
+    # Запускаем в фоновом режиме
+    nohup python -m main > /dev/null 2>&1 &
+    pid=$!
+    echo "Бот запущен в фоновом режиме с PID: $pid"
+    echo $pid > bot.pid
+else
+    # Запускаем в foreground режиме
+    echo "Запуск бота в foreground режиме..."
+    python -m main
+fi

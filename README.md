@@ -40,7 +40,10 @@
 - poetry env use python3.12
 - mkdir src
 - poetry install --no-root
+- sudo chmod +x stop_bot.sh
+- sudo chmod +x ./start.sh
 
 ### Запуск проекта
 - poetry run ./start.sh с помощью поетри  виртуальном окружении
+- poetry run ./stop_bot.sh  остановка бота
 - ./start_doc_com.sh с помощью докер компосе

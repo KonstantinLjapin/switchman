@@ -10,6 +10,7 @@ from middleware.logging_middleware import register_log_middleware
 from filters.chat_type import register_message_filters
 from filters.call import register_callback_filters
 
+
 async def register_handlers(bot):
     register_chat_custom_message_handlers(bot)
     register_custom_message_handlers(bot)

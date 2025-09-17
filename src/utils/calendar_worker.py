@@ -57,10 +57,11 @@ async def modern_mounts_bundle(statistic: str, month: int, year: int) -> str:
         if statistic[day].isdigit():
             emojis.append("ВЫХ" if int(statistic[day]) else "БУД")
             days.append(str(day))
-    size_tale_of_week: int = len(days) % 7
+    size_tale_of_week: int = (len(days) + first_weekday) % 7
     day_line: str = ""
     emoji_line: str = ""
     n = 0
+    print(first_weekday)
     for day_in_week in range(7):
         if day_in_week >= first_weekday:
             day_line += f"  {days[n]}|"
@@ -88,18 +89,16 @@ async def modern_mounts_bundle(statistic: str, month: int, year: int) -> str:
             day_line = ""
             emoji_line = ""
             f = 0
-
+    print(days)
     del emojis[:-size_tale_of_week]
     del days[:-size_tale_of_week]
-    # clear temp string line
+    print(days)
     day_line = ""
     emoji_line = ""
-    # TODO нужно предусмотреть заполнение всейх недель когда остатка нету
-    for day, emoji, t_index in zip(days, emojis, range(len(emojis))):
-        f += 1
-        day_line += f" {days[t_index]}|" if len(days[t_index]) > 1 else f"  {days[t_index]}|"
-        emoji_line += f"{emojis[t_index]}|"
-    # pull the tail of week
+    if len(days) % 7 > 0:
+        for day, emoji, t_index in zip(days, emojis, range(len(emojis))):
+            day_line += f" {days[t_index]}|" if len(days[t_index]) > 1 else f"  {days[t_index]}|"
+            emoji_line += f"{emojis[t_index]}|"
     output = output + emoji_line[:-1] + "\n" + day_line[:-1] + "\n"
     return output
 
@@ -119,4 +118,6 @@ async def day_status(day: str):
 
 
 if __name__ == '__main__':
-    print(asyncio.run(modern_mounts_bundle("M010101001001001010101010101010", 5, 2025)))
+    # "M0000110000011000001100000110000" jul 2025
+
+    print(asyncio.run(modern_mounts_bundle("M0000110000011000001100000110000", 7, 2025)))
