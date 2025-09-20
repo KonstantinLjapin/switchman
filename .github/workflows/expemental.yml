@@ -1,4 +1,4 @@
-name: Experimental CI Test
+name: SSH Connection Test
 
 on:
   push:
@@ -7,41 +7,24 @@ on:
     branches: [ci_cd_worker]
 
 jobs:
-  test-runner:
+  ssh-connection:
     runs-on: ubuntu-latest
-    env:
-      JOB_LEVEL_VAR: "Это переменная уровня job"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Print Hello World
-        run: echo "Hello World from GitHub Actions Runner!"
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Show current directory
-        run: pwd && ls -la
-
-      # Работа с секретом
-      - name: Set and display secret as environment variable
-        env:
-          MY_ENV_VAR: ${{ secrets.MY_SECRET }}  # Замените MY_SECRET на имя вашего секрета
+      - name: Add server to known hosts
         run: |
-          echo "Значение секрета, хранящееся в переменной окружения:"
-          echo "Длина значения: ${#MY_ENV_VAR} символов"  # Это покажет длину строки
-          # Попытка вывести значение напрямую приведет к его маскировке в логах
-          echo "Вывод переменной (будет замаскирован): $MY_ENV_VAR"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
-      # Альтернативный способ: использование контекста secrets напрямую в run
-      - name: Direct secret usage example
+      - name: Connect to server and create directory
         run: |
-          echo "Прямое использование секрета в команде (также будет замаскировано): ${{ secrets.MY_SECRET }}"
-
-      # Работа с переменными
-      - name: Step with variable
-        env:
-          STEP_LEVEL_VAR: "Это переменная уровня step"
-        run: |
-          echo "Переменная job уровня: $JOB_LEVEL_VAR"
-          echo "Переменная step уровня: $STEP_LEVEL_VAR"
-          echo "Переменная репозитория: ${{ vars.MY_VAR }}"
+          ssh -vvv laser_boy@${{ secrets.SERVER_IP }} "mkdir -p action_test_successful"
