@@ -25,6 +25,10 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Connect to server and create directory
+      - name: Test SSH connection
         run: |
-          ssh -vvv laser_boy@${{ secrets.SERVER_IP }} "mkdir -p action_test_successful"
+          ssh -T -o BatchMode=yes laser_boy@${{ secrets.SERVER_IP }} "echo 'SSH connection successful!'"
+
+      - name: Create test directory on server
+        run: |
+          ssh -o BatchMode=yes laser_boy@${{ secrets.SERVER_IP }} "mkdir -p action_test_successful && echo 'Directory created successfully'"
