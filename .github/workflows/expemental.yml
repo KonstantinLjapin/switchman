@@ -18,3 +18,18 @@ jobs:
 
       - name: Show current directory
         run: pwd && ls -la
+
+      # Новая секция для работы с секретом
+      - name: Set and display secret as environment variable
+        env:
+          MY_ENV_VAR: ${{ secrets.MY_SECRET }}  # Замените MY_SECRET на имя вашего секрета
+        run: |
+          echo "Значение секрета, хранящееся в переменной окружения:"
+          echo "Длина значения: ${#MY_ENV_VAR} символов"  # Это покажет длину строки
+          # Попытка вывести значение напрямую приведет к его маскировке в логах
+          echo "Вывод переменной (будет замаскирован): $MY_ENV_VAR"
+
+      # Альтернативный способ: использование контекста secrets напрямую в run
+      - name: Direct secret usage example
+        run: |
+          echo "Прямое использование секрета в команде (также будет замаскировано): ${{ secrets.MY_SECRET }}"
