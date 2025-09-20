@@ -8,8 +8,7 @@ services:
     stop_signal: SIGINT
     container_name: bot
     command: bash -c "sleep 15s;
-      cd src;
-      python3 -m src.main;"
+      ./start.sh;"
     volumes:
       - ./dump/app:/usr/src/app
     networks:
