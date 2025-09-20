@@ -1,0 +1,42 @@
+name: Deploy Bot with PR Check
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Запускаем только если PR был мерджнут и это был PR из dev в main
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'dev'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy bot
+        run: |
+          ssh -o BatchMode=yes laser_boy@${{ secrets.SERVER_IP }} << 'EOF'
+            cd swithman
+            poetry run ./stop_bot.sh
+            git pull origin main
+            poetry run ./start.sh
+          EOF
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Деплой успешно завершен! Бот обновлен и перезапущен."
