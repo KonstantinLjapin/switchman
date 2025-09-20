@@ -9,6 +9,9 @@ on:
 jobs:
   test-runner:
     runs-on: ubuntu-latest
+    env:
+      JOB_LEVEL_VAR: "Это переменная уровня job"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,7 +22,7 @@ jobs:
       - name: Show current directory
         run: pwd && ls -la
 
-      # Новая секция для работы с секретом
+      # Работа с секретом
       - name: Set and display secret as environment variable
         env:
           MY_ENV_VAR: ${{ secrets.MY_SECRET }}  # Замените MY_SECRET на имя вашего секрета
@@ -33,3 +36,12 @@ jobs:
       - name: Direct secret usage example
         run: |
           echo "Прямое использование секрета в команде (также будет замаскировано): ${{ secrets.MY_SECRET }}"
+
+      # Работа с переменными
+      - name: Step with variable
+        env:
+          STEP_LEVEL_VAR: "Это переменная уровня step"
+        run: |
+          echo "Переменная job уровня: $JOB_LEVEL_VAR"
+          echo "Переменная step уровня: $STEP_LEVEL_VAR"
+          echo "Переменная репозитория: ${{ vars.MY_VAR }}"
