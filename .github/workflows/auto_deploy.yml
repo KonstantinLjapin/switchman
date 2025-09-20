@@ -30,10 +30,12 @@ jobs:
       - name: Deploy bot
         run: |
           ssh -o BatchMode=yes laser_boy@${{ secrets.SERVER_IP }} << 'EOF'
-            cd swithman
-            poetry run ./stop_bot.sh
-            git pull origin main
-            poetry run ./start.sh
+          set -x
+          cd swichman
+          poetry run ./stop_bot.sh
+          git pull origin main
+          poetry run ./start.sh
+          set +x
           EOF
 
       - name: Notify on success
