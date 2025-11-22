@@ -2,13 +2,13 @@
 
 set -e
 
-echo $(poetry env info --path)
+echo "$(poetry env info --path) : VENV"
 # Активируем окружение Poetry
 source $(poetry env info --path)/bin/activate
 
 # Устанавливаем PYTHONPATH
-export PYTHONPATH="/home/laser_boy/switchman/src:$PYTHONPATH"
-
+export PYTHONPATH="$(pwd)/src:$PYTHONPATH"
+echo "$PYTHONPATH : PYTHONPATH"
 
 export ENV_PATH=$(echo "$(pwd)/.env")
 echo "$ENV_PATH : ENV_PATH loaded"
