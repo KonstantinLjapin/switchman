@@ -4,8 +4,8 @@ from aiohttp import web
 import telebot
 
 from core.bot import bot
-from core.config import bot_settings
-from core.log_config import loger
+#from core.config import bot_settings
+#from core.log_config import loger
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
@@ -62,7 +62,7 @@ async def shutdown(app,loger):
     await bot.close_session()
 
 
-async def setup(bot, loger):
+async def setup(bot, loger, bot_settings):
     # Remove webhook, it fails sometimes the set if there is a previous webhook
     loger.info('Starting up: removing old webhook')
     await bot.remove_webhook()
@@ -90,7 +90,7 @@ async def run_web(bot, loger, bot_settings):
 
 
 if __name__ == '__main__':
-    API_TOKEN = bot_settings.bot_token
+    """API_TOKEN = bot_settings.bot_token
     WEBHOOK_HOST = bot_settings.webhook_host
     WEBHOOK_PORT = bot_settings.webhook_port
     WEBHOOK_LISTEN = bot_settings.webhook_listen
@@ -105,3 +105,5 @@ if __name__ == '__main__':
     print(WEBHOOK_SSL_PRIV)
     print(WEBHOOK_URL_BASE)
     print(WEBHOOK_URL_PATH)
+"""
+    print("ok")
