@@ -4,9 +4,9 @@ import asyncio
 from aiohttp import web
 import telebot
 
-#from core.bot import bot
+
 from core.config import env_bot
-from core.log_config import loger
+
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
