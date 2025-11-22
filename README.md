@@ -43,7 +43,17 @@
 - sudo chmod +x stop_bot.sh
 - sudo chmod +x ./start.sh
 
+### quick_start
+- git clone https://github.com/KonstantinLjapin/switchman.git -b main
+- poetry config virtualenvs.in-project true
+- poetry env use python3.12 
+- nano .env # 
+- source .venv/bin/activate
+- poetry install --no-root
+- sudo chmod +x stop_bot.sh
+- sudo chmod +x ./start.sh
+
 ### Запуск проекта
-- poetry run ./start.sh с помощью поетри  виртуальном окружении
+- poetry run ./start.sh y(в режиме демона) с помощью поетри  виртуальном окружении
 - poetry run ./stop_bot.sh  остановка бота
 - ./start_doc_com.sh с помощью докер компосе
