@@ -5,7 +5,7 @@ from aiohttp import web
 import telebot
 
 #from core.bot import bot
-from core.config import env_bot, bot_settings
+from core.config import env_bot
 from core.log_config import loger
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
@@ -91,20 +91,6 @@ async def run_web(bot, loger, bot_settings):
 
 
 if __name__ == '__main__':
-    API_TOKEN = bot_settings.bot_token
-    WEBHOOK_HOST = bot_settings.webhook_host
-    WEBHOOK_PORT = bot_settings.webhook_port
-    WEBHOOK_LISTEN = bot_settings.webhook_listen
-    WEBHOOK_SSL_CERT = bot_settings.webhook_ssl_cert
-    WEBHOOK_SSL_PRIV = bot_settings.webhook_ssl_priv
-    WEBHOOK_URL_BASE = bot_settings.webhook_url_base
-    WEBHOOK_URL_PATH = bot_settings.webhook_url_path
-    print(API_TOKEN)
-    print(WEBHOOK_HOST)
-    print(WEBHOOK_PORT)
-    print(WEBHOOK_SSL_CERT)
-    print(WEBHOOK_SSL_PRIV)
-    print(WEBHOOK_URL_BASE)
-    print(WEBHOOK_URL_PATH)
+
     print(env_bot.env_path)
     print("ok")

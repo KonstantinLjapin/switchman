@@ -18,5 +18,5 @@ class SettingsBot(BaseSettings):
     model_config = SettingsConfigDict(env_file=SettingsEnvPath().env_path)
 
 
-bot_settings: SettingsBot = SettingsBot()
+#bot_settings: SettingsBot = SettingsBot()
 env_bot = SettingsEnvPath()
