@@ -1,12 +1,12 @@
-"""
+
 import ssl
 import asyncio
 from aiohttp import web
 import telebot
 
-from core.bot import bot
-#from core.config import bot_settings
-#from core.log_config import loger
+#from core.bot import bot
+from core.config import env_bot, bot_settings
+from core.log_config import loger
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
@@ -46,7 +46,7 @@ async def main(bot, loger):
     await register_handlers(bot)
 
 
-async def handle(request):
+async def handle(request, bot):
     if request.match_info.get('token') == bot.token:
         request_body_dict = await request.json()
         update = telebot.types.Update.de_json(request_body_dict)
@@ -56,7 +56,7 @@ async def handle(request):
         return web.Response(status=403)
 
 
-async def shutdown(app,loger):
+async def shutdown(app, loger, bot):
     loger.info('Shutting down: removing webhook')
     await bot.remove_webhook()
     loger.info('Shutting down: closing session')
@@ -88,10 +88,10 @@ async def run_web(bot, loger, bot_settings):
         port=int(bot_settings.webhook_port),
         ssl_context=context,
     )
-"""
+
 
 if __name__ == '__main__':
-    """API_TOKEN = bot_settings.bot_token
+    API_TOKEN = bot_settings.bot_token
     WEBHOOK_HOST = bot_settings.webhook_host
     WEBHOOK_PORT = bot_settings.webhook_port
     WEBHOOK_LISTEN = bot_settings.webhook_listen
@@ -106,5 +106,5 @@ if __name__ == '__main__':
     print(WEBHOOK_SSL_PRIV)
     print(WEBHOOK_URL_BASE)
     print(WEBHOOK_URL_PATH)
-"""
+    print(env_bot.env_path)
     print("ok")

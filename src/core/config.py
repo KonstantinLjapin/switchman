@@ -19,4 +19,4 @@ class SettingsBot(BaseSettings):
 
 
 bot_settings: SettingsBot = SettingsBot()
-
+env_bot = SettingsEnvPath()
