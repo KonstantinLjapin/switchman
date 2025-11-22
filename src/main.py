@@ -1,9 +1,10 @@
+"""
 import ssl
 import asyncio
 from aiohttp import web
 import telebot
 
-"""from core.bot import bot
+from core.bot import bot
 #from core.config import bot_settings
 #from core.log_config import loger
 
