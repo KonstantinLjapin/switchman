@@ -3,7 +3,7 @@ import asyncio
 from aiohttp import web
 import telebot
 
-from core.bot import bot
+"""from core.bot import bot
 #from core.config import bot_settings
 #from core.log_config import loger
 
@@ -87,7 +87,7 @@ async def run_web(bot, loger, bot_settings):
         port=int(bot_settings.webhook_port),
         ssl_context=context,
     )
-
+"""
 
 if __name__ == '__main__':
     """API_TOKEN = bot_settings.bot_token
