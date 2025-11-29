@@ -69,8 +69,11 @@ async def setup():
     await bot.remove_webhook()
     # Set webhook
     loger.info('Starting up: setting webhook')
-    await bot.set_webhook(url=bot_settings.webhook_url_base + bot_settings.webhook_url_path,
-                          certificate=open(bot_settings.webhook_ssl_cert, 'r'))
+    await bot.set_webhook(
+        url=bot_settings.webhook_url_base.format(bot_settings.webhook_host, bot_settings.webhook_port)
+        + bot_settings.webhook_url_path,
+        certificate=open(bot_settings.webhook_ssl_cert, 'r')
+    )
     app = web.Application()
     app.router.add_post('/{token}/', handle)
     app.on_cleanup.append(shutdown)
