@@ -3,7 +3,7 @@ import ssl
 import asyncio
 from aiohttp import web
 import telebot
-from config import SettingsBot
+from .config import SettingsBot
 
 
 async def run_bot_hooks(bot, logger: logging, settings: SettingsBot):
