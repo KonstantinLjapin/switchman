@@ -72,7 +72,7 @@ async def setup():
     await bot.set_webhook(url=bot_settings.webhook_url_base + bot_settings.webhook_url_path,
                           certificate=open(bot_settings.webhook_ssl_cert, 'r'))
     app = web.Application()
-    app.router.add_post('/{}/'.format(bot_settings.bot_token), handle)
+    app.router.add_post('/{token}/', handle)
     app.on_cleanup.append(shutdown)
     return app
 
