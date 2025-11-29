@@ -79,9 +79,12 @@ async def setup():
     app.on_cleanup.append(shutdown)
     return app
 
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+async def echo_message(message):
+    await bot.reply_to(message, message.text)
 
 if __name__ == '__main__':
-    asyncio.run(registration(bot, loger))
+    #asyncio.run(registration(bot, loger))
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
     # Start aiohttp server
