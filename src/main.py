@@ -39,8 +39,8 @@ async def register_handlers(bot_instance: AsyncTeleBot) -> None:
     )
 
 
-async def registration(bot_instance: AsyncTeleBot, loger_instance: logging, settings: SettingsBot):
-    loger.info("Starting bot")
+async def registration(bot_instance: AsyncTeleBot, loger_instance: logging):
+    loger_instance.info("Starting bot")
     # await register_middleware(bot_instance)
     await register_log_middleware(bot_instance, loger_instance)
     await register_message_filters(bot_instance, loger_instance)
@@ -51,7 +51,7 @@ async def registration(bot_instance: AsyncTeleBot, loger_instance: logging, sett
 if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
-    asyncio.run(registration(bot_instance=bot, loger_instance=loger, settings=bot_settings))
+    asyncio.run(registration(bot_instance=bot, loger_instance=loger))
     web.run_app(
         setup(bot_instance=bot, settings=bot_settings),
         host=bot_settings.webhook_listen,
