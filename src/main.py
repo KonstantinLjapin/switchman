@@ -4,7 +4,6 @@ from aiohttp import web
 import telebot
 
 from core.bot import bot
-from core.config import env_bot, bot_settings
 from core.log_config import loger
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
@@ -45,7 +44,6 @@ async def registration(bot, loger):
     await register_callback_filters(bot, loger)
     await register_handlers(bot)
 
-
 async def handle(request):
     if request.match_info.get('token') == bot.token:
         request_body_dict = await request.json()
@@ -69,7 +67,6 @@ async def setup():
     await bot.remove_webhook()
     # Set webhook
     loger.info('Starting up: setting webhook')
-    await registration(bot, loger)
     await bot.set_webhook(
         url=bot_settings.webhook_url_base.format(bot_settings.webhook_host, bot_settings.webhook_port)
         + bot_settings.webhook_url_path.format(bot_settings.bot_token),
@@ -83,7 +80,7 @@ async def setup():
 if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
-    # Start aiohttp server
+    asyncio.run(registration(bot, loger))
     web.run_app(
         setup(),
         host=bot_settings.webhook_listen,
