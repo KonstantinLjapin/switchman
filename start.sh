@@ -2,13 +2,16 @@
 
 set -e
 
+echo "$(poetry env info --path) : VENV"
 # Активируем окружение Poetry
 source $(poetry env info --path)/bin/activate
 
 # Устанавливаем PYTHONPATH
-export PYTHONPATH="/home/laser_boy/switchman/src:$PYTHONPATH"
+export PYTHONPATH="$(pwd)/src:$PYTHONPATH"
+echo "$PYTHONPATH : PYTHONPATH"
 
-# Загрузка токена
+export ENV_PATH=$(echo "$(pwd)/.env")
+echo "$ENV_PATH : ENV_PATH loaded"
 export BOT_TOKEN=$(grep "BOT_TOKEN" .env | cut -d= -f2)
 echo "$BOT_TOKEN : BOT_TOKEN loaded"
 
