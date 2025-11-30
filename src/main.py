@@ -20,7 +20,7 @@ from filters.chat_type import register_message_filters
 from filters.call import register_callback_filters
 
 
-async def register_handlers(bot):
+async def register_handlers(bot: AsyncTeleBot) -> None:
     register_chat_custom_message_handlers(bot)
     register_custom_message_handlers(bot)
     register_custom_private_callback_query_handlers(bot)
@@ -40,7 +40,7 @@ async def register_handlers(bot):
 
 async def registration(bot: AsyncTeleBot, loger: logging, settings: SettingsBot):
     loger.info("Starting bot")
-    #await register_middleware(bot)
+    # await register_middleware(bot)
     await register_log_middleware(bot, loger)
     await register_message_filters(bot, loger)
     await register_callback_filters(bot, loger)
@@ -51,9 +51,10 @@ async def registration(bot: AsyncTeleBot, loger: logging, settings: SettingsBot)
     loger.info('Starting up: setting webhook')
     await bot.set_webhook(
         url=settings.webhook_url_base.format(settings.webhook_host, settings.webhook_port)
-            + settings.webhook_url_path.format(settings.bot_token),
+        + settings.webhook_url_path.format(settings.bot_token),
         certificate=open(settings.webhook_ssl_cert, 'r')
     )
+
 
 async def handle(request):
     if request.match_info.get('token') == bot.token:
@@ -67,16 +68,19 @@ async def handle(request):
 
 async def shutdown(app):
     loger.info('Shutting down: removing webhook')
-    await bot.remove_webhook()
+    bot_instance = app['bot_instance']
+    await bot_instance.remove_webhook()
     loger.info('Shutting down: closing session')
-    await bot.close_session()
+    await bot_instance.close_session()
 
 
-async def setup():
+async def setup(bot_instance: AsyncTeleBot, settings: SettingsBot):
     # Remove webhook, it fails sometimes the set if there is a previous webhook
     app = web.Application()
     app.router.add_post('/{token}/', handle)
     app.on_cleanup.append(shutdown)
+    app['bot_instance'] = bot_instance
+    app['bot_settings'] = settings
     return app
 
 if __name__ == '__main__':
@@ -84,7 +88,7 @@ if __name__ == '__main__':
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
     asyncio.run(registration(bot=bot, loger=loger, settings=bot_settings))
     web.run_app(
-        setup(),
+        setup(bot_instance=bot, settings=bot_settings),
         host=bot_settings.webhook_listen,
         port=bot_settings.webhook_port,
         ssl_context=context,
