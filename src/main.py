@@ -1,12 +1,13 @@
 import ssl
 import asyncio
 from aiohttp import web
+import logging
 import telebot
+from telebot.async_telebot import AsyncTeleBot
 
 from core.bot import bot
 from core.log_config import loger
-from core.config import bot_settings
-from core.aiohttp_web_hook import setup
+from core.config import SettingsBot, bot_settings
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
@@ -37,7 +38,7 @@ async def register_handlers(bot):
     )
 
 
-async def registration(bot, loger, bot_settings):
+async def registration(bot: AsyncTeleBot, loger: logging, settings: SettingsBot):
     loger.info("Starting bot")
     #await register_middleware(bot)
     await register_log_middleware(bot, loger)
@@ -49,11 +50,10 @@ async def registration(bot, loger, bot_settings):
     # Set webhook
     loger.info('Starting up: setting webhook')
     await bot.set_webhook(
-        url=bot_settings.webhook_url_base.format(bot_settings.webhook_host, bot_settings.webhook_port)
-            + bot_settings.webhook_url_path.format(bot_settings.bot_token),
-        certificate=open(bot_settings.webhook_ssl_cert, 'r')
+        url=settings.webhook_url_base.format(settings.webhook_host, settings.webhook_port)
+            + settings.webhook_url_path.format(settings.bot_token),
+        certificate=open(settings.webhook_ssl_cert, 'r')
     )
-
 
 async def handle(request):
     if request.match_info.get('token') == bot.token:
@@ -72,12 +72,19 @@ async def shutdown(app):
     await bot.close_session()
 
 
+async def setup():
+    # Remove webhook, it fails sometimes the set if there is a previous webhook
+    app = web.Application()
+    app.router.add_post('/{token}/', handle)
+    app.on_cleanup.append(shutdown)
+    return app
+
 if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
-    asyncio.run(registration(bot, loger, bot_settings))
+    asyncio.run(registration(bot=bot, loger=loger, settings=bot_settings))
     web.run_app(
-        setup(bot_settings, shutdown, handle),
+        setup(),
         host=bot_settings.webhook_listen,
         port=bot_settings.webhook_port,
         ssl_context=context,
