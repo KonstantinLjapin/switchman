@@ -1,14 +1,15 @@
-import logging
-import ssl
 import asyncio
 from aiohttp import web
 import telebot
-from .config import SettingsBot
+from aiohttp.web import Request
 
 
-async def setup(settings, shutdown, handle):
-    # Remove webhook, it fails sometimes the set if there is a previous webhook
-    app = web.Application()
-    app.router.add_post('/{}/'.format(settings.bot_token), handle)
-    app.on_cleanup.append(shutdown)
-    return app
+async def handle(request: Request):
+    bot_instance = request.app['bot_instance']
+    if request.match_info.get('token') == bot_instance.token:
+        request_body_dict = await request.json()
+        update = telebot.types.Update.de_json(request_body_dict)
+        asyncio.ensure_future(bot_instance.process_new_updates([update]))
+        return web.Response()
+    else:
+        return web.Response(status=403)

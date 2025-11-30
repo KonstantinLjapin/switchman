@@ -8,6 +8,7 @@ from telebot.async_telebot import AsyncTeleBot
 from core.bot import bot
 from core.log_config import loger
 from core.config import SettingsBot, bot_settings
+from core.aiohttp_web_hook import handle
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
@@ -54,16 +55,6 @@ async def registration(bot: AsyncTeleBot, loger: logging, settings: SettingsBot)
         + settings.webhook_url_path.format(settings.bot_token),
         certificate=open(settings.webhook_ssl_cert, 'r')
     )
-
-
-async def handle(request):
-    if request.match_info.get('token') == bot.token:
-        request_body_dict = await request.json()
-        update = telebot.types.Update.de_json(request_body_dict)
-        asyncio.ensure_future(bot.process_new_updates([update]))
-        return web.Response()
-    else:
-        return web.Response(status=403)
 
 
 async def shutdown(app):
