@@ -5,6 +5,8 @@ import telebot
 
 from core.bot import bot
 from core.log_config import loger
+from core.config import bot_settings
+from core.aiohttp_web_hook import setup
 
 from custom_handlers.group.message import register_chat_custom_message_handlers
 from custom_handlers.private.message import register_custom_message_handlers
@@ -15,7 +17,6 @@ from telebot.types import BotCommand
 from middleware.logging_middleware import register_log_middleware
 from filters.chat_type import register_message_filters
 from filters.call import register_callback_filters
-from core.config import bot_settings
 
 
 async def register_handlers(bot):
@@ -36,13 +37,23 @@ async def register_handlers(bot):
     )
 
 
-async def registration(bot, loger):
+async def registration(bot, loger, bot_settings):
     loger.info("Starting bot")
     #await register_middleware(bot)
     await register_log_middleware(bot, loger)
     await register_message_filters(bot, loger)
     await register_callback_filters(bot, loger)
     await register_handlers(bot)
+    loger.info('Starting up: removing old webhook')
+    await bot.remove_webhook()
+    # Set webhook
+    loger.info('Starting up: setting webhook')
+    await bot.set_webhook(
+        url=bot_settings.webhook_url_base.format(bot_settings.webhook_host, bot_settings.webhook_port)
+            + bot_settings.webhook_url_path.format(bot_settings.bot_token),
+        certificate=open(bot_settings.webhook_ssl_cert, 'r')
+    )
+
 
 async def handle(request):
     if request.match_info.get('token') == bot.token:
@@ -61,28 +72,12 @@ async def shutdown(app):
     await bot.close_session()
 
 
-async def setup():
-    # Remove webhook, it fails sometimes the set if there is a previous webhook
-    loger.info('Starting up: removing old webhook')
-    await bot.remove_webhook()
-    # Set webhook
-    loger.info('Starting up: setting webhook')
-    await bot.set_webhook(
-        url=bot_settings.webhook_url_base.format(bot_settings.webhook_host, bot_settings.webhook_port)
-        + bot_settings.webhook_url_path.format(bot_settings.bot_token),
-        certificate=open(bot_settings.webhook_ssl_cert, 'r')
-    )
-    app = web.Application()
-    app.router.add_post('/{token}/', handle)
-    app.on_cleanup.append(shutdown)
-    return app
-
 if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(bot_settings.webhook_ssl_cert, bot_settings.webhook_ssl_priv)
-    asyncio.run(registration(bot, loger))
+    asyncio.run(registration(bot, loger, bot_settings))
     web.run_app(
-        setup(),
+        setup(bot_settings, shutdown, handle),
         host=bot_settings.webhook_listen,
         port=bot_settings.webhook_port,
         ssl_context=context,
