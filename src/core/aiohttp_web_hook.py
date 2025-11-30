@@ -27,10 +27,17 @@ async def shutdown(app):
 
 
 async def setup(bot_instance: AsyncTeleBot, settings: SettingsBot):
-    # Remove webhook, it fails sometimes the set if there is a previous webhook
     app = web.Application()
     app.router.add_post('/{token}/', handle)
     app.on_cleanup.append(shutdown)
     app['bot_instance'] = bot_instance
     app['bot_settings'] = settings
+    # Remove webhook, it fails sometimes the set if there is a previous webhook
+    await bot_instance.remove_webhook()
+    # Set webhook
+    await bot_instance.set_webhook(
+        url=settings.webhook_url_base.format(settings.webhook_host, settings.webhook_port)
+        + settings.webhook_url_path.format(settings.bot_token),
+        certificate=open(settings.webhook_ssl_cert, 'r')
+    )
     return app

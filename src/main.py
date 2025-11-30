@@ -46,15 +46,6 @@ async def registration(bot_instance: AsyncTeleBot, loger: logging, settings: Set
     await register_message_filters(bot_instance, loger)
     await register_callback_filters(bot_instance, loger)
     await register_handlers(bot_instance)
-    loger.info('Starting up: removing old webhook')
-    await bot_instance.remove_webhook()
-    # Set webhook
-    loger.info('Starting up: setting webhook')
-    await bot_instance.set_webhook(
-        url=settings.webhook_url_base.format(settings.webhook_host, settings.webhook_port)
-        + settings.webhook_url_path.format(settings.bot_token),
-        certificate=open(settings.webhook_ssl_cert, 'r')
-    )
 
 
 if __name__ == '__main__':
